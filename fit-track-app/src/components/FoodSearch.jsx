@@ -1,10 +1,13 @@
+// FoodSearch.jsx - allows user to search for foods using Edamam API and add them to today's tracker
 import { useState } from "react";
 import axios from "axios";
 
+// Edamam API after signing up for a free account and creating an app to get your own appId and appKey
 export default function FoodSearch({ addFood }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
 
+  // Search for foods using Edamam API and update results state
   const searchFood = async () => {
     const appId = "YOUR_APP_ID";
     const appKey = "YOUR_APP_KEY";
@@ -15,6 +18,7 @@ export default function FoodSearch({ addFood }) {
     setResults(res.data.hints);
   }
 
+  // Render search input, button, and results list with add buttons
   return (
     <div className="p-4 max-w-md mx-auto">
       <input 

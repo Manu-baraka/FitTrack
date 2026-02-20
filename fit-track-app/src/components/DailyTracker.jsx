@@ -1,15 +1,18 @@
+// DailyTracker.jsx - shows today's food intake and total calories, allows adding new foods
 import { useEffect, useState } from "react";
 
 export default function DailyTracker() {
   const today = new Date().toISOString().split("T")[0];
   const [foods, setFoods] = useState(JSON.parse(localStorage.getItem(today)) || []);
 
+  // Add a food item to today's list and update localStorage
   const addFood = food => {
     const updated = [...foods, { ...food, date: today }];
     setFoods(updated);
     localStorage.setItem(today, JSON.stringify(updated));
   }
 
+  // Calculate total calories for today's foods
   const totalCalories = foods.reduce((sum, f) => sum + (f.nutrients.ENERC_KCAL || 0), 0);
 
   return (
