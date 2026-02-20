@@ -14,7 +14,7 @@ export default function WeeklyHistory() {
 
   const data = week.map(day => {
     const foods = JSON.parse(localStorage.getItem(day)) || [];
-    return foods.reduce((sum, f) => sum + (f.nutrients.ENERC_KCAL || 0), 0);
+    return foods.reduce((sum, f) => sum + (f.calories || 0), 0);
   });
 
   // Chart.js bar chart configuration

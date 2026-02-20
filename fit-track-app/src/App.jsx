@@ -1,36 +1,28 @@
-// App.jsx
-import UserForm from "./components/UserForm.jsx";
-import DailyTracker from "./components/DailyTracker.jsx";
-import WeeklyHistory from "./components/WeeklyHistory.jsx";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { calculateBMR } from "./utils/bmr.js";
+import Home from "./Pages/Home";
+import DailyPage from "./Pages/DailyPage";
+import WeeklyPage from "./Pages/WeeklyPage";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user")) || null
   );
 
-  const bmr = user
-    ? calculateBMR(user.age, user.weight, user.height, user.gender)
-    : null;
-
   return (
-    <div className="p-4 max-w-md mx-auto">
-      {user ? (
-        <>
-          <h1 className="text-2xl font-bold mb-2">Welcome, {user.name}!</h1>
-          <p className="text-lg mb-4">Your BMR is {bmr} kcal/day</p>
+    <Router>
+      <div className="min-h-screen bg-[#49588C]">
+        <Navbar />
 
-          {/* DailyTracker now contains its own FoodSearch */}
-          <DailyTracker />
-
-          {/* Weekly summary component */}
-          <WeeklyHistory />
-        </>
-      ) : (
-        <UserForm setUser={setUser} />
-      )}
-    </div>
+        <Routes>
+          <Route path="/" element={<Home user={user} setUser={setUser} />} />
+          <Route path="/daily" element={<DailyPage />} />
+          <Route path="/weekly" element={<WeeklyPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
+
 export default App;
