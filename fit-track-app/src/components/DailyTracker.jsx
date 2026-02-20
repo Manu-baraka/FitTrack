@@ -1,27 +1,75 @@
-// DailyTracker.jsx - shows today's food intake and total calories, allows adding new foods
-import { useEffect, useState } from "react";
+// DailyTracker.jsx
+import { useState, useEffect } from "react";
+import FoodSearch from "./FoodSearch.jsx";
 
 export default function DailyTracker() {
-  const today = new Date().toISOString().split("T")[0];
-  const [foods, setFoods] = useState(JSON.parse(localStorage.getItem(today)) || []);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [dailyFoods, setDailyFoods] = useState([]);
 
-  // Add a food item to today's list and update localStorage
-  const addFood = food => {
-    const updated = [...foods, { ...food, date: today }];
-    setFoods(updated);
-    localStorage.setItem(today, JSON.stringify(updated));
-  }
+  // Load foods when date changes
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem(selectedDate)) || [];
+    setDailyFoods(saved);
+  }, [selectedDate]);
 
-  // Calculate total calories for today's foods
-  const totalCalories = foods.reduce((sum, f) => sum + (f.nutrients.ENERC_KCAL || 0), 0);
+  // Save foods whenever dailyFoods changes
+  useEffect(() => {
+    localStorage.setItem(selectedDate, JSON.stringify(dailyFoods));
+  }, [dailyFoods, selectedDate]);
+
+  const addFood = (food) => setDailyFoods((prev) => [...prev, food]);
+  const removeFood = (index) =>
+    setDailyFoods((prev) => prev.filter((_, i) => i !== index));
+
+  const totalCalories = dailyFoods.reduce(
+    (sum, f) => sum + (f.calories || 0),
+    0
+  );
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-xl font-bold">Today's Intake</h2>
-      <ul className="space-y-2">
-        {foods.map((f, idx) => <li key={idx}>{f.label} - {Math.round(f.nutrients.ENERC_KCAL)} kcal</li>)}
+    <div className="p-4 border rounded shadow mb-6">
+      {/* Date picker */}
+      <div className="mb-4">
+        <label className="mr-2 font-semibold">Select Date:</label>
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="border p-2 rounded"
+          max={new Date().toISOString().split("T")[0]}
+        />
+      </div>
+
+      {/* Food search */}
+      <FoodSearch addFood={addFood} />
+
+      {/* Daily food list */}
+      <h2 className="text-xl font-semibold mt-6">
+        Foods for {selectedDate} ({dailyFoods.length})
+      </h2>
+      <ul className="space-y-2 mt-2">
+        {dailyFoods.map((f, idx) => (
+          <li
+            key={idx}
+            className="border p-2 flex justify-between items-center"
+          >
+            <span>{f.label}</span>
+            <span>{Math.round(f.calories)} kcal /100g</span>
+            <button
+              onClick={() => removeFood(idx)}
+              className="bg-red-500 text-white px-2 py-1 rounded ml-2"
+            >
+              Remove
+            </button>
+          </li>
+        ))}
       </ul>
-      <p className="mt-2 font-bold">Total: {Math.round(totalCalories)} kcal</p>
+
+      <p className="mt-4 font-bold text-lg">
+        Total Calories: {Math.round(totalCalories)} kcal
+      </p>
     </div>
-  )
+  );
 }
