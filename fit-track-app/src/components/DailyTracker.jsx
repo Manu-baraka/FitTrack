@@ -59,7 +59,7 @@ export default function DailyTracker() {
             <span>{Math.round(f.calories)} kcal /100g</span>
             <button
               onClick={() => removeFood(idx)}
-              className="bg-red-500 text-white px-2 py-1 rounded ml-2"
+              className="bg-red-500 text-black px-2 py-1 rounded ml-2"
             >
               Remove
             </button>
