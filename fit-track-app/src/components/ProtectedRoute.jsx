@@ -1,11 +1,8 @@
 import { Navigate } from "react-router-dom";
- function ProtectedRoute({ user, children }) {
-  // If no user, redirect to home or login
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
+import { useAuth } from "../context/AuthContext";
 
-  // If user exists, render the protected component
+export default function ProtectedRoute({ children }) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
   return children;
 }
-export default ProtectedRoute;

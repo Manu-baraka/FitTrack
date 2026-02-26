@@ -1,28 +1,29 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-export default function Signup({ setUser }) {
+ function Login() {
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    if (!username || !password) return alert("Enter all fields!");
-
-    // Save to localStorage
-    const user = { username, password };
-    localStorage.setItem("user", JSON.stringify(user));
-    setUser(user);
-    navigate("/daily"); // redirect after signup
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (!savedUser || savedUser.username !== username || savedUser.password !== password) {
+      return alert("Invalid credentials!");
+    }
+    login(savedUser);
+    navigate("/daily");
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-3xl mb-6">Sign Up</h1>
+      <h1 className="text-3xl mb-6">Login</h1>
       <form
         className="flex flex-col gap-4 bg-white p-6 rounded shadow-md text-black"
-        onSubmit={handleSignup}
+        onSubmit={handleLogin}
       >
         <input
           type="text"
@@ -42,9 +43,10 @@ export default function Signup({ setUser }) {
           type="submit"
           className="bg-[#49588C] text-white p-2 rounded hover:bg-[#37476C]"
         >
-          Sign Up
+          Login
         </button>
       </form>
     </div>
   );
 }
+export default Login;

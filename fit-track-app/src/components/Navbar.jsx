@@ -11,8 +11,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-black bg-opacity-30 p-3 flex gap-4 text-white font-semibold items-center">
-      
+    <nav className="bg-black bg-opacity-30 p-3 flex gap-4 items-center font-semibold">
       {user && (
         <>
           <Link to="/">Home</Link>
@@ -30,10 +29,12 @@ export default function Navbar() {
             Logout
           </button>
         ) : (
-          <Link to="/login">Login</Link>
+          <>
+            <Link to="/login" className="mr-2">Login</Link>
+            <Link to="/signup">Sign Up</Link>
+          </>
         )}
       </div>
-
     </nav>
   );
 }
