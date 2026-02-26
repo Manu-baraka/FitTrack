@@ -4,6 +4,8 @@ import Home from "./Pages/Home";
 import DailyPage from "./Pages/DailyPage";
 import WeeklyPage from "./Pages/WeeklyPage";
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 
 function App() {
   const [user, setUser] = useState(
@@ -17,8 +19,10 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home user={user} setUser={setUser} />} />
-          <Route path="/daily" element={<DailyPage />} />
-          <Route path="/weekly" element={<WeeklyPage />} />
+          <Route path="/daily" element={<ProtectedRoute user={user}><DailyPage /></ProtectedRoute>} />
+          <Route path="/weekly" element={<ProtectedRoute user={user}><WeeklyPage /></ProtectedRoute>} />
+          
+          
         </Routes>
       </div>
     </Router>
