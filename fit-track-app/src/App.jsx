@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./Pages/Home";
@@ -8,12 +9,17 @@ import Login from "./Pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
   return (
     <div className="min-h-screen bg-[#49588C] font-poppins text-white">
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home user={user} setUser={setUser} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
@@ -35,9 +41,13 @@ function App() {
           }
         />
 
-        <Route path="*" element={<h1 className="text-center mt-10">404 - Page Not Found</h1>} />
+        <Route
+          path="*"
+          element={<h1 className="text-center mt-10">404 - Page Not Found</h1>}
+        />
       </Routes>
     </div>
   );
 }
+
 export default App;
